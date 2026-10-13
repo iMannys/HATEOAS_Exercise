@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Country extends Place
+public final class Country extends Place
 {
   private final String code;              // ISO 3166-1 alpha-2, e.g. "DK"
   private final Set<Continent> continents;

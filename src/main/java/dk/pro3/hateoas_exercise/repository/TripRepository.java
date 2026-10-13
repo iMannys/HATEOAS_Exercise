@@ -10,6 +10,7 @@ public interface TripRepository
   List<Trip> findAll();
   Optional<Trip> findById(Long id);
   List<Trip> findByName(String name);
+  Optional<Trip> findByVisitId(Long visitId);
   boolean existsById(Long id);
   Trip save(Trip trip);
   void deleteById(Long id);

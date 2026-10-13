@@ -34,6 +34,13 @@ import java.util.concurrent.ConcurrentSkipListMap;
         .filter(trip -> trip.getName().equalsIgnoreCase(name)).toList();
   }
 
+  // A visit belongs to exactly one trip, so at most one trip matches.
+  @Override public Optional<Trip> findByVisitId(Long visitId)
+  {
+    return trips.values().stream().filter(trip -> trip.getVisits().stream()
+        .anyMatch(visit -> visit.getId().equals(visitId))).findFirst();
+  }
+
   @Override public boolean existsById(Long id)
   {
     return trips.containsKey(id);

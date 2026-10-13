@@ -1,6 +1,6 @@
 package dk.pro3.hateoas_exercise.domain;
 
-public abstract class Place
+public sealed abstract class Place permits City, Country
 {
   private final String name;
 

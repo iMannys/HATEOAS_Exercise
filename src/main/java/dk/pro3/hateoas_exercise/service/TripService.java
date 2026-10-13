@@ -49,6 +49,14 @@ public class TripService
     return tripRepository.findByName(name);
   }
 
+  // Visit has no reference to its trip (the trip owns its visits), so the trip
+  // is found by searching the aggregate roots.
+  public Trip getTripOfVisit(Long visitId)
+  {
+    return tripRepository.findByVisitId(visitId)
+        .orElseThrow(() -> new VisitNotFoundException(visitId));
+  }
+
   // The first visit is required: a trip has 1..* visits.
   // Give either countryCode or cityId for where the visit takes place.
   public Trip createTrip(String name, String countryCode, Long cityId,
