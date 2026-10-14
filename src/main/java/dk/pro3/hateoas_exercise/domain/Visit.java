@@ -3,7 +3,7 @@ package dk.pro3.hateoas_exercise.domain;
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Visit
+public final class Visit
 {
   private static final AtomicLong NEXT_ID = new AtomicLong(
       1);   // see City for how AtomicLong works

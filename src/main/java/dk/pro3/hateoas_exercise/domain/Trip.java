@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-public class Trip
+public final class Trip
 {
   private static final AtomicLong NEXT_ID = new AtomicLong(
       1);   // see City for how AtomicLong works

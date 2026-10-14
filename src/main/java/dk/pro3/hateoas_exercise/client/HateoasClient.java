@@ -13,7 +13,6 @@ import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.web.client.RestClientException;
 
 import java.net.URI;
-import java.util.Collection;
 
 // A HATEOAS client: the only URL it knows is the root. Every other URL is found by
 // following links by their rel name, so the server can change its URLs freely.
