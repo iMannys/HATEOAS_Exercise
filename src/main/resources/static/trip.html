@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rejser · Travel tracker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="brand" href="/">Travel tracker</a>
+      <a href="/country">Lande</a>
+      <a href="/city">Byer</a>
+      <a href="/trip" aria-current="page">Rejser</a>
+      <a href="/visit">Besøg</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Rejser</h1>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Navn</th><th>Start</th><th>Slut</th><th>Lande</th><th>Besøg</th></tr></thead>
+        <tbody>
+          <tr><td>Weekend in Denmark</td><td>2026-05-01</td><td>2026-05-04</td><td>DK</td><td>2</td></tr>
+          <tr><td>Japan round trip</td><td>2026-09-10</td><td>2026-09-22</td><td>JP</td><td>3</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Dummy-data. JSON: <code>curl -H "Accept: application/hal+json" http://localhost:8080/api/trip</code></p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Byer · Travel tracker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="brand" href="/">Travel tracker</a>
+      <a href="/country">Lande</a>
+      <a href="/city" aria-current="page">Byer</a>
+      <a href="/trip">Rejser</a>
+      <a href="/visit">Besøg</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Byer</h1>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Navn</th><th>Land</th><th>Indbyggere</th><th>Hovedstad</th></tr></thead>
+        <tbody>
+          <tr><td>Copenhagen</td><td>DK</td><td>660.000</td><td>Ja</td></tr>
+          <tr><td>Aarhus</td><td>DK</td><td>300.000</td><td>Nej</td></tr>
+          <tr><td>Odense</td><td>DK</td><td>180.000</td><td>Nej</td></tr>
+          <tr><td>Tokyo</td><td>JP</td><td>14.000.000</td><td>Ja</td></tr>
+          <tr><td>Kyoto</td><td>JP</td><td>1.460.000</td><td>Nej</td></tr>
+          <tr><td>Ankara</td><td>TR</td><td>5.700.000</td><td>Ja</td></tr>
+          <tr><td>Istanbul</td><td>TR</td><td>15.600.000</td><td>Nej</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Dummy-data. JSON: <code>curl -H "Accept: application/hal+json" http://localhost:8080/api/city</code></p>
+  </main>
+</body>
+</html>

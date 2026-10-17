@@ -18,7 +18,7 @@ import java.net.URI;
 // following links by their rel name, so the server can change its URLs freely.
 public class HateoasClient
 {
-  private static final String ROOT_URL = "http://localhost:8080/";
+  private static final String ROOT_URL = "http://localhost:8080/api";
 
   // The type references end in {} so they are anonymous subclasses: a subclass keeps
   // its generic type at runtime, so Jackson knows to build CountryDTOs and not maps.

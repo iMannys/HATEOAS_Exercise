@@ -23,7 +23,7 @@ class VisitAndTripApiTest extends ApiTestBase
   {
     Long id = copenhagenVisit.getId();
 
-    mockMvc.perform(get("/visit/" + id))
+    mockMvc.perform(get("/api/visit/" + id))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.arrivalDate").value("2026-05-01"))
         .andExpect(jsonPath("$.departureDate").value("2026-05-03"))
@@ -40,34 +40,34 @@ class VisitAndTripApiTest extends ApiTestBase
 
   @Test void placeLinkOfACityVisitPointsToTheCity() throws Exception
   {
-    mockMvc.perform(get("/visit/" + copenhagenVisit.getId()))
+    mockMvc.perform(get("/api/visit/" + copenhagenVisit.getId()))
         .andExpect(jsonPath("$._links.place.href").value(endsWith("/city/" + copenhagen.getId())));
   }
 
   @Test void placeLinkOfACountryVisitPointsToTheCountry() throws Exception
   {
-    mockMvc.perform(get("/visit/" + denmarkVisit.getId()))
+    mockMvc.perform(get("/api/visit/" + denmarkVisit.getId()))
         .andExpect(jsonPath("$._links.place.href").value(endsWith("/country/DK")));
   }
 
   @Test void unknownVisitIsNotFound() throws Exception
   {
-    mockMvc.perform(get("/visit/-1")).andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/visit/-1")).andExpect(status().isNotFound());
   }
 
   @Test void visitsCanBeFilteredByCountry() throws Exception
   {
-    mockMvc.perform(get("/visit").param("country", "DK"))
+    mockMvc.perform(get("/api/visit").param("country", "DK"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$._embedded.visits", hasSize(2)));
-    mockMvc.perform(get("/visit").param("country", "JP"))
+    mockMvc.perform(get("/api/visit").param("country", "JP"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$._embedded").doesNotExist());
   }
 
   @Test void datesCanBeChanged() throws Exception
   {
-    mockMvc.perform(patch("/visit/" + copenhagenVisit.getId() + "/dates")
+    mockMvc.perform(patch("/api/visit/" + copenhagenVisit.getId() + "/dates")
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"arrivalDate\": \"2026-06-01\", \"departureDate\": \"2026-06-02\"}"))
         .andExpect(status().isOk())
@@ -77,7 +77,7 @@ class VisitAndTripApiTest extends ApiTestBase
 
   @Test void departureBeforeArrivalIsABadRequest() throws Exception
   {
-    mockMvc.perform(patch("/visit/" + copenhagenVisit.getId() + "/dates")
+    mockMvc.perform(patch("/api/visit/" + copenhagenVisit.getId() + "/dates")
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"arrivalDate\": \"2026-06-02\", \"departureDate\": \"2026-06-01\"}"))
         .andExpect(status().isBadRequest());
@@ -85,7 +85,7 @@ class VisitAndTripApiTest extends ApiTestBase
 
   @Test void journalCanBeUpdated() throws Exception
   {
-    mockMvc.perform(patch("/visit/" + copenhagenVisit.getId() + "/journal")
+    mockMvc.perform(patch("/api/visit/" + copenhagenVisit.getId() + "/journal")
             .contentType(MediaType.APPLICATION_JSON).content("{\"journal\": \"Tivoli\"}"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.journal").value("Tivoli"));
@@ -97,7 +97,7 @@ class VisitAndTripApiTest extends ApiTestBase
   {
     Long id = trip.getId();
 
-    mockMvc.perform(get("/trip/" + id))
+    mockMvc.perform(get("/api/trip/" + id))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value("Weekend in Denmark"))
         .andExpect(jsonPath("$.startDate").value("2026-05-01"))
@@ -110,14 +110,14 @@ class VisitAndTripApiTest extends ApiTestBase
   // HalConfig renders this rel as an array even when it holds a single link
   @Test void visitedCountriesIsAnArrayEvenWithOneCountry() throws Exception
   {
-    mockMvc.perform(get("/trip/" + trip.getId()))
+    mockMvc.perform(get("/api/trip/" + trip.getId()))
         .andExpect(jsonPath("$._links.visitedCountries", hasSize(1)))
         .andExpect(jsonPath("$._links.visitedCountries[0].href").value(endsWith("/country/DK")));
   }
 
   @Test void tripOfAVisitIsFoundThroughTheVisitsTripLink() throws Exception
   {
-    mockMvc.perform(get("/visit/" + denmarkVisit.getId() + "/trip"))
+    mockMvc.perform(get("/api/visit/" + denmarkVisit.getId() + "/trip"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value("Weekend in Denmark"))
         .andExpect(jsonPath("$._links.self.href").value(endsWith("/trip/" + trip.getId())));
@@ -125,26 +125,26 @@ class VisitAndTripApiTest extends ApiTestBase
 
   @Test void tripOfUnknownVisitIsNotFound() throws Exception
   {
-    mockMvc.perform(get("/visit/-1/trip")).andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/visit/-1/trip")).andExpect(status().isNotFound());
   }
 
   @Test void visitsOfATripAreListed() throws Exception
   {
-    mockMvc.perform(get("/trip/" + trip.getId() + "/visits"))
+    mockMvc.perform(get("/api/trip/" + trip.getId() + "/visits"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$._embedded.visits[*].placeName").value(containsInAnyOrder("Copenhagen", "Denmark")));
   }
 
   @Test void tripsCanBeSearchedByName() throws Exception
   {
-    mockMvc.perform(get("/trip").param("name", "weekend in denmark"))
+    mockMvc.perform(get("/api/trip").param("name", "weekend in denmark"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$._embedded.trips", hasSize(1)));
   }
 
   @Test void createdTripIsReturnedWithItsLocation() throws Exception
   {
-    mockMvc.perform(post("/trip").contentType(MediaType.APPLICATION_JSON).content("""
+    mockMvc.perform(post("/api/trip").contentType(MediaType.APPLICATION_JSON).content("""
             {"name": "Tokyo", "countryCode": "JP",
              "arrivalDate": "2026-09-10", "departureDate": "2026-09-15"}
             """))
@@ -156,7 +156,7 @@ class VisitAndTripApiTest extends ApiTestBase
 
   @Test void tripWithBothCountryAndCityIsABadRequest() throws Exception
   {
-    mockMvc.perform(post("/trip").contentType(MediaType.APPLICATION_JSON).content("""
+    mockMvc.perform(post("/api/trip").contentType(MediaType.APPLICATION_JSON).content("""
             {"name": "Both", "countryCode": "DK", "cityId": %d,
              "arrivalDate": "2026-09-10", "departureDate": "2026-09-15"}
             """.formatted(aarhus.getId())))
@@ -165,7 +165,7 @@ class VisitAndTripApiTest extends ApiTestBase
 
   @Test void tripWithoutNameIsABadRequest() throws Exception
   {
-    mockMvc.perform(post("/trip").contentType(MediaType.APPLICATION_JSON).content("""
+    mockMvc.perform(post("/api/trip").contentType(MediaType.APPLICATION_JSON).content("""
             {"countryCode": "DK", "arrivalDate": "2026-09-10", "departureDate": "2026-09-15"}
             """))
         .andExpect(status().isBadRequest())
@@ -174,7 +174,7 @@ class VisitAndTripApiTest extends ApiTestBase
 
   @Test void tripCanBeRenamed() throws Exception
   {
-    mockMvc.perform(patch("/trip/" + trip.getId()).contentType(MediaType.APPLICATION_JSON)
+    mockMvc.perform(patch("/api/trip/" + trip.getId()).contentType(MediaType.APPLICATION_JSON)
             .content("{\"name\": \"Long weekend\"}"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value("Long weekend"));
@@ -182,7 +182,7 @@ class VisitAndTripApiTest extends ApiTestBase
 
   @Test void addedVisitIsReturnedWithItsOwnLocation() throws Exception
   {
-    mockMvc.perform(post("/trip/" + trip.getId() + "/visits").contentType(MediaType.APPLICATION_JSON)
+    mockMvc.perform(post("/api/trip/" + trip.getId() + "/visits").contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"cityId": %d, "arrivalDate": "2026-05-04", "departureDate": "2026-05-05"}
                 """.formatted(aarhus.getId())))
@@ -190,30 +190,30 @@ class VisitAndTripApiTest extends ApiTestBase
         .andExpect(header().string("Location", containsString("/visit/")))
         .andExpect(jsonPath("$.placeName").value("Aarhus"));
 
-    mockMvc.perform(get("/trip/" + trip.getId() + "/visits"))
+    mockMvc.perform(get("/api/trip/" + trip.getId() + "/visits"))
         .andExpect(jsonPath("$._embedded.visits", hasSize(3)));
   }
 
   @Test void visitCanBeRemovedFromATrip() throws Exception
   {
-    mockMvc.perform(delete("/trip/" + trip.getId() + "/visits/" + denmarkVisit.getId()))
+    mockMvc.perform(delete("/api/trip/" + trip.getId() + "/visits/" + denmarkVisit.getId()))
         .andExpect(status().isNoContent());
-    mockMvc.perform(get("/visit/" + denmarkVisit.getId())).andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/visit/" + denmarkVisit.getId())).andExpect(status().isNotFound());
   }
 
   @Test void lastVisitOfATripCannotBeRemoved() throws Exception
   {
-    mockMvc.perform(delete("/trip/" + trip.getId() + "/visits/" + denmarkVisit.getId()));
+    mockMvc.perform(delete("/api/trip/" + trip.getId() + "/visits/" + denmarkVisit.getId()));
 
-    mockMvc.perform(delete("/trip/" + trip.getId() + "/visits/" + copenhagenVisit.getId()))
+    mockMvc.perform(delete("/api/trip/" + trip.getId() + "/visits/" + copenhagenVisit.getId()))
         .andExpect(status().isConflict());
   }
 
   @Test void deletedTripIsGoneWithItsVisits() throws Exception
   {
-    mockMvc.perform(delete("/trip/" + trip.getId())).andExpect(status().isNoContent());
+    mockMvc.perform(delete("/api/trip/" + trip.getId())).andExpect(status().isNoContent());
 
-    mockMvc.perform(get("/trip/" + trip.getId())).andExpect(status().isNotFound());
-    mockMvc.perform(get("/visit/" + copenhagenVisit.getId())).andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/trip/" + trip.getId())).andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/visit/" + copenhagenVisit.getId())).andExpect(status().isNotFound());
   }
 }

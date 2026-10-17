@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forside · Travel tracker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="brand" href="/">Travel tracker</a>
+      <a href="/country">Lande</a>
+      <a href="/city">Byer</a>
+      <a href="/trip">Rejser</a>
+      <a href="/visit">Besøg</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Travel tracker</h1>
+    <p>Hold styr på de lande og byer, du har besøgt.</p>
+    <div class="cards">
+      <a class="card" href="/country"><strong>Lande</strong><span>3 lande</span></a>
+      <a class="card" href="/city"><strong>Byer</strong><span>7 byer</span></a>
+      <a class="card" href="/trip"><strong>Rejser</strong><span>2 rejser</span></a>
+      <a class="card" href="/visit"><strong>Besøg</strong><span>5 besøg</span></a>
+    </div>
+    <p class="note">Dummy-side. API'et ligger under <code>/api</code>:
+      <code>curl -H "Accept: application/hal+json" http://localhost:8080/api</code></p>
+  </main>
+</body>
+</html>

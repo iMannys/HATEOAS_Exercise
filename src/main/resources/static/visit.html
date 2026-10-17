@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Besøg · Travel tracker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="brand" href="/">Travel tracker</a>
+      <a href="/country">Lande</a>
+      <a href="/city">Byer</a>
+      <a href="/trip">Rejser</a>
+      <a href="/visit" aria-current="page">Besøg</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Besøg</h1>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Sted</th><th>Ankomst</th><th>Afrejse</th><th>Dagbog</th></tr></thead>
+        <tbody>
+          <tr><td>Copenhagen</td><td>2026-05-01</td><td>2026-05-03</td><td>Nyhavn and Tivoli</td></tr>
+          <tr><td>Aarhus</td><td>2026-05-03</td><td>2026-05-04</td><td>ARoS</td></tr>
+          <tr><td>Tokyo</td><td>2026-09-10</td><td>2026-09-15</td><td></td></tr>
+          <tr><td>Kyoto</td><td>2026-09-15</td><td>2026-09-20</td><td>Temples</td></tr>
+          <tr><td>Japan</td><td>2026-09-20</td><td>2026-09-22</td><td>Countryside</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Dummy-data. JSON: <code>curl -H "Accept: application/hal+json" http://localhost:8080/api/visit</code></p>
+  </main>
+</body>
+</html>

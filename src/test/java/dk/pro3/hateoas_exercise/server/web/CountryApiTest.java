@@ -19,18 +19,18 @@ class CountryApiTest extends ApiTestBase
 {
   @Test void rootLinksToEveryCollection() throws Exception
   {
-    mockMvc.perform(get("/"))
+    mockMvc.perform(get("/api"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$._links.self.href").value(endsWith("/")))
-        .andExpect(jsonPath("$._links.countries.href").value(endsWith("/country")))
-        .andExpect(jsonPath("$._links.cities.href").value(endsWith("/city")))
-        .andExpect(jsonPath("$._links.visits.href").value(endsWith("/visit")))
-        .andExpect(jsonPath("$._links.trips.href").value(endsWith("/trip")));
+        .andExpect(jsonPath("$._links.self.href").value(endsWith("/api")))
+        .andExpect(jsonPath("$._links.countries.href").value(endsWith("/api/country")))
+        .andExpect(jsonPath("$._links.cities.href").value(endsWith("/api/city")))
+        .andExpect(jsonPath("$._links.visits.href").value(endsWith("/api/visit")))
+        .andExpect(jsonPath("$._links.trips.href").value(endsWith("/api/trip")));
   }
 
   @Test void countryHasItsDataAndLinks() throws Exception
   {
-    mockMvc.perform(get("/country/DK"))
+    mockMvc.perform(get("/api/country/DK"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name").value("Denmark"))
         .andExpect(jsonPath("$.code").value("DK"))
@@ -44,7 +44,7 @@ class CountryApiTest extends ApiTestBase
 
   @Test void countriesAreEmbeddedUnderTheirCollectionRelation() throws Exception
   {
-    mockMvc.perform(get("/country"))
+    mockMvc.perform(get("/api/country"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$._embedded.countries", hasSize(2)))
         .andExpect(jsonPath("$._links.self.href").value(endsWith("/country")));
@@ -52,7 +52,7 @@ class CountryApiTest extends ApiTestBase
 
   @Test void unknownCountryIsNotFound() throws Exception
   {
-    mockMvc.perform(get("/country/SE"))
+    mockMvc.perform(get("/api/country/SE"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.status").value(404))
         .andExpect(jsonPath("$.detail").exists());
@@ -62,7 +62,7 @@ class CountryApiTest extends ApiTestBase
   {
     for (String continent : new String[] {"AS", "as", "ASIA"})
     {
-      mockMvc.perform(get("/country").param("continent", continent))
+      mockMvc.perform(get("/api/country").param("continent", continent))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$._embedded.countries[*].code").value(containsInAnyOrder("JP")));
     }
@@ -70,14 +70,14 @@ class CountryApiTest extends ApiTestBase
 
   @Test void unknownContinentGivesBadRequestWithTheValidCodes() throws Exception
   {
-    mockMvc.perform(get("/country").param("continent", "XX"))
+    mockMvc.perform(get("/api/country").param("continent", "XX"))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.detail").value(containsString("Valid codes: AF, AN, AS, EU, NA, OC, SA")));
   }
 
   @Test void createdCountryIsReturnedWithItsLocation() throws Exception
   {
-    mockMvc.perform(post("/country").contentType(MediaType.APPLICATION_JSON).content("""
+    mockMvc.perform(post("/api/country").contentType(MediaType.APPLICATION_JSON).content("""
             {"name": "Sweden", "code": "SE", "continents": ["EUROPE"],
              "capitalName": "Stockholm", "capitalPopulation": 980000}
             """))
@@ -85,12 +85,12 @@ class CountryApiTest extends ApiTestBase
         .andExpect(header().string("Location", endsWith("/country/SE")))
         .andExpect(jsonPath("$.name").value("Sweden"));
 
-    mockMvc.perform(get("/country/SE")).andExpect(status().isOk());
+    mockMvc.perform(get("/api/country/SE")).andExpect(status().isOk());
   }
 
   @Test void duplicateCountryIsAConflict() throws Exception
   {
-    mockMvc.perform(post("/country").contentType(MediaType.APPLICATION_JSON).content("""
+    mockMvc.perform(post("/api/country").contentType(MediaType.APPLICATION_JSON).content("""
             {"name": "Denmark", "code": "DK", "continents": ["EUROPE"],
              "capitalName": "Copenhagen", "capitalPopulation": 1}
             """))
@@ -99,7 +99,7 @@ class CountryApiTest extends ApiTestBase
 
   @Test void invalidCountryListsTheInvalidFields() throws Exception
   {
-    mockMvc.perform(post("/country").contentType(MediaType.APPLICATION_JSON).content("""
+    mockMvc.perform(post("/api/country").contentType(MediaType.APPLICATION_JSON).content("""
             {"name": "", "code": "SE", "continents": ["EUROPE"], "capitalName": "Stockholm"}
             """))
         .andExpect(status().isBadRequest())
@@ -108,7 +108,7 @@ class CountryApiTest extends ApiTestBase
 
   @Test void capitalCanBeChanged() throws Exception
   {
-    mockMvc.perform(patch("/country/DK").contentType(MediaType.APPLICATION_JSON)
+    mockMvc.perform(patch("/api/country/DK").contentType(MediaType.APPLICATION_JSON)
             .content("{\"cityId\": " + aarhus.getId() + "}"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$._links.capital.href").value(endsWith("/city/" + aarhus.getId())));
@@ -116,12 +116,12 @@ class CountryApiTest extends ApiTestBase
 
   @Test void countryWithVisitsCannotBeDeleted() throws Exception
   {
-    mockMvc.perform(delete("/country/DK")).andExpect(status().isConflict());
+    mockMvc.perform(delete("/api/country/DK")).andExpect(status().isConflict());
   }
 
   @Test void countryWithoutVisitsCanBeDeleted() throws Exception
   {
-    mockMvc.perform(delete("/country/JP")).andExpect(status().isNoContent());
-    mockMvc.perform(get("/country/JP")).andExpect(status().isNotFound());
+    mockMvc.perform(delete("/api/country/JP")).andExpect(status().isNoContent());
+    mockMvc.perform(get("/api/country/JP")).andExpect(status().isNotFound());
   }
 }

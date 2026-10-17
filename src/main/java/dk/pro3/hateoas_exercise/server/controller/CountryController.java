@@ -16,6 +16,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/api")
 public class CountryController
 {
   private final CountryService countryService;
@@ -36,7 +37,7 @@ public class CountryController
         methodOn(CountryController.class).getCountries()).withSelfRel()));
   }
 
-  @GetMapping("/country/{code}")
+    @GetMapping("/country/{code}")
   public ResponseEntity<CountryModel> getCountry(@PathVariable String code)
   {
     return ResponseEntity.ok(
